@@ -1,0 +1,15 @@
+def stock_plot(stock,date):
+    stock_ = stock_info(stock)
+    plt.figure(figsize = (10,8))
+    stock_.loc['2020-01-01':date, 'Close'].plot(label = 'Close')
+    stock_.loc['2020-01-01':date, 'MA10'].plot(label = 'MA10')
+    stock_.loc['2020-01-01':date, 'MA20'].plot(label = 'MA20')
+    stock_.loc['2020-01-01':date, 'MA50'].plot(label = 'MA50')
+    stock_.loc['2020-01-01':date, 'MA100'].plot(label = 'MA100')
+    plt.title(f'The stock price of {stock} in 2020',  size = 20)
+    plt.xlabel('Date', size = 20)
+    plt.ylabel('Price',  size = 20)
+    plt.legend(loc = 'best')
+    plt.show()
+    
+stock_plot('tsla','2020-11-06')
