@@ -1,0 +1,31 @@
+def model_prediction_plot(stock):
+    
+    stock_ = stock_info2(stock)
+    global feature, target
+    feature = np.array(stock_.drop(['Prediction'],1))[:-future_day]
+    target = np.array(stock_['Prediction'])[:-future_day]
+
+    X_train, X_test, y_train, y_test = train_test_split(feature,target,test_size = 0.2, random_state = 0)
+    x_future = stock_.drop(['Prediction'],1)[:-future_day]
+    x_future = x_future.tail(future_day)
+    x_future = np.array(x_future)
+    
+    forest = RandomForestRegressor(n_estimators = 100, random_state = 10)
+    forest.fit(X_train,y_train)
+    print(f'the training accuracy: {forest.score(X_train,y_train)}')
+    print(f'the testing accuracy: {forest.score(X_test,y_test)}')
+    tree_prediction = forest.predict(x_future)
+    
+    true = stock_[feature.shape[0]:]
+    true['Prediction'] = tree_prediction
+    plt.figure(figsize = (10,10))
+    plt.plot(stock_['Close'])
+    plt.plot(true['Close'], color = 'blue')
+    plt.plot(true['Prediction'], color = 'green', linestyle=':', marker='|', alpha = 0.65)
+    plt.title(f'Stock Price Prediction of {stock}',size = 20)
+    plt.xlabel('Date',size = 20)
+    plt.ylabel('Price',size = 20)
+    plt.legend(['Origin', 'True', 'Prediction'], loc = 'best')
+    plt.show()
+
+model_prediction_plot('tsla')
