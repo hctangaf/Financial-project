@@ -1,0 +1,8 @@
+def final_model(stock):
+    stock_ = stock_info2(stock)
+    model_prediction_plot(stock)
+    final_forest = RandomForestRegressor(n_estimators = 100,random_state = 66)
+    final_forest.fit(feature,target)
+    print(f'the final model accuracy: {final_forest.score(feature,target)}')
+    
+final_model('tsla')
