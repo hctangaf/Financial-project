@@ -1,0 +1,9 @@
+def strategy_plot(stock):
+    stock_ = stock_info(stock)
+    stock_['Wealth'].plot()
+    plt.title(f"The Total Money You Win in {stock} is {stock_.loc[stock_.index[-2],'Wealth'].round(3)}")
+    
+strategy_plot('tsla')
+strategy_plot('AMZN')
+strategy_plot('GOOG')
+strategy_plot('FB')
