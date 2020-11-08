@@ -1,0 +1,32 @@
+def stock_info(stock):
+    stock_ = web.DataReader(stock,'yahoo',start,end)
+    stock_['Price'] = stock_['Close'].shift(-1)
+    stock_['PriceDiff'] = stock_['Price'] - stock_['Close']
+    stock_['Return'] = stock_['PriceDiff']/stock_['Close']
+    stock_['Direction'] = [1 if stock_.loc[ei,'PriceDiff']>0
+                    else -1 for ei in stock_.index]
+    stock_['MA10'] = stock_['Close'].rolling(10).mean()
+    stock_['MA20'] = stock_['Close'].rolling(20).mean()
+    stock_['MA50'] = stock_['Close'].rolling(50).mean()
+    stock_['MA100'] = stock_['Close'].rolling(100).mean()
+    stock_['Strategy'] = [1 if (stock_.loc[ei,'MA10']> stock_.loc[ei,'MA20']
+                    and stock_.loc[ei,'MA50']> stock_.loc[ei,'MA100'])
+                   else 0 for ei in stock_.index]
+    stock_['Profit'] = [stock_.loc[ei,'Price']-stock_.loc[ei,'Close'] if stock_.loc[ei,'Strategy']==1 else 0 
+               for ei in stock_.index]
+    stock_['Wealth'] = stock_['Profit'].cumsum()
+    stock_ = stock_.dropna()
+    return stock_
+    return stock_.shape
+
+stock_info('tsla')
+
+def stock_info2(stock):
+    stock_ = stock_info(stock)
+    global future_day
+    future_day = 100
+    stock_['Prediction'] = stock_['Close'].shift(-future_day)
+    new_df = stock_[['Close','Prediction']]
+    return (new_df)
+
+stock_info2('tsla')
